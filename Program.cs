@@ -6,64 +6,48 @@ class Program
     {
         while (true)
         {
-            // Generate a random number
             Random rnd = new Random();
             int theNumber = rnd.Next(0, 10);
+            int attempts = 3; // Allow only 3 attempts
 
-            // Prompt the user to guess
-            Console.WriteLine("Let's play a game! I've guessed a number between 0 and 10. Enter a number, and let's see if you guess correctly!");
-            int gamerInput;
-            while (true) // Loop until valid input is provided
+            Console.WriteLine("Guess the number between 0 and 10. You have 3 attempts!");
+
+            bool guessedCorrectly = false;
+            for (int i = 1; i <= attempts; i++)
             {
-                string? input = Console.ReadLine();
-                if (int.TryParse(input, out gamerInput) && gamerInput >= 0 && gamerInput <= 10)
-                {
-                    break; // Valid input, exit the loop
-                }
-                Console.WriteLine("Invalid input! Please enter a number between 0 and 10.");
-            }
+                int gamerInput = GetValidNumber();
 
-            // Check the guess
-            if (gamerInput == theNumber)
-            {
-                Console.WriteLine($"Bravo! Your answer {theNumber} was correct! Do you want to continue or exit the game? To continue, press 'c'. To exit, press 'x'.");
-
-                // Get the user's decision
-                var key = Console.ReadLine()!;
-                if (key.ToLower() == "x") // Exit game
+                if (gamerInput == theNumber)
                 {
-                    Console.WriteLine("Thanks for playing! Goodbye!");
-                    Environment.Exit(0);
-                }
-                else if (key.ToLower() == "c") // Continue playing
-                {
-                    Console.WriteLine("Great! Let's play again!");
+                    Console.WriteLine($"Bravo! You guessed correctly in {i} attempt(s)!");
+                    guessedCorrectly = true;
+                    break;
                 }
                 else
                 {
-                    Console.WriteLine("Invalid input. Continuing by default.");
+                    Console.WriteLine($"Wrong guess! You have {attempts - i} attempt(s) left.");
                 }
             }
-            else
-            {
-                Console.WriteLine($"Oops! You entered the wrong number. The correct number was {theNumber}. Do you want to give it another try or exit the game? For another try, press 'a'. To exit, press 'x'.");
 
-                // Get the user's decision
-                var key = Console.ReadLine()!;
-                if (key.ToLower() == "x") // Exit game
-                {
-                    Console.WriteLine("Thanks for playing! Goodbye!");
-                    Environment.Exit(0);
-                }
-                else if (key.ToLower() == "a") // Try again
-                {
-                    Console.WriteLine("Okay, let's try again!");
-                }
-                else
-                {
-                    Console.WriteLine("Invalid input. Continuing by default.");
-                }
+            if (!guessedCorrectly)
+            {
+                Console.WriteLine($"Game over! The correct number was {theNumber}.");
             }
+
+            Console.WriteLine("Do you want to play again? (y/n)");
+            if (Console.ReadLine()?.ToLower() != "y") break;
+        }
+    }
+    static int GetValidNumber()
+    {
+        while (true)
+        {
+            string? input = Console.ReadLine();
+            if (int.TryParse(input, out int number) && number >= 0 && number <= 10)
+            {
+                return number; // Return the valid number
+            }
+            Console.WriteLine("Invalid input! Please enter a number between 0 and 10.");
         }
     }
 }
